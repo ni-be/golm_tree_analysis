@@ -1,0 +1,7 @@
+1) inquire data license
+2) use lastools to rasterize .las -> CHM 
+3) use Treetop to count trees
+4) Area coverage
+5) evergreens ? 
+6) Documentation
+7) Presentation
