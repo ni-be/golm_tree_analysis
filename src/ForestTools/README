@@ -1,0 +1,11 @@
+Setup:
+
+InstallR: 
+https://cran.r-project.org/bin/windows/base/
+
+ForestTools:
+https://cran.r-project.org/web/packages/ForestTools/vignettes/treetop_analysis.html
+
+Change LAS import path to your local Directory
+-> How to import path relative to repository?
+-> Create Directory for all input data

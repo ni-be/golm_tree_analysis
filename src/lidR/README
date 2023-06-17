@@ -1,0 +1,11 @@
+Documentation:
+
+https://cran.r-project.org/web/packages/lidR/lidR.pdf
+
+Project:
+
+https://github.com/r-lidar/lidR
+
+Change LAS import path to your local Directory
+-> How to import path relative to repository?
+-> Create Directory for all input data
