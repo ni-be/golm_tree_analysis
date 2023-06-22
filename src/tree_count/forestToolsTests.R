@@ -44,9 +44,9 @@ kootenayCHM
 
 
 
-lin <- function(x){x * 0.02 + 0.3}
+lin <- function(x){x * 0.04 + 0.5}
 
-ttops <- vwf(CHM = chm, winFun = lin, minHeight = 2)
+ttops <- vwf(CHM = chm, winFun = lin, minHeight = 3.5)
 
 plot(chm, xlab = "", ylab = "", xaxt = 'n', yaxt = 'n')
 plot(ttops, col = "green", pch = 20, cex = 0.5, add = TRUE)
@@ -54,7 +54,9 @@ plot(ttops, col = "green", pch = 20, cex = 0.5, add = TRUE)
 mean(ttops$height)
 
 # Create crown map
-crowns <- mcws(treetops = ttops, CHM = chm, minHeight = 1.5, verbose = FALSE)
+crowns <- mcws(treetops = ttops, CHM = chm, minHeight = 3.5, verbose = FALSE)
 
 # Plot crowns
 plot(crowns, col = sample(rainbow(50), length(unique(crowns[])), replace = TRUE), legend = FALSE, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
+
+sp_summarise(ttops)

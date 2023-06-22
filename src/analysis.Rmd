@@ -14,9 +14,33 @@ library(ForestTools)
 
 ```
 ```{r}
-las <- readLAS("/home/nibe/PROJECTS/golm_tree_analysis/data/Golm_May06_2018_Milan_UTM33N_WGS84_6digit_cl.las")
+#las <- readLAS("/home/nibe/PROJECTS/golm_tree_analysis/data/Golm_May06_2018_Milan_UTM33N_WGS84_6digit_cl.las", filter = "-keep_first -drop_z_below 5 -drop_z_above 4)
 ```
 
 ```{r}
-plot(las, color = "ScanAngleRank", bg = "white", axis = TRUE, legend = TRUE)
+# Default algorithm for reading .las
+las <- readLAS("/home/nibe/PROJECTS/golm_tree_analysis/data/Golm_May06_2018_Milan_UTM33N_WGS84_6digit_cl.las", filter = "-keep_first -drop_z_below 5 -drop_z_above 40")
+
+
+CHM <- rasterize_canopy(las, res=3.5, p2r(0.2), pkg = "raster")
+plot(CHM, col = col)
+
+```
+
+
+```{r echo=TRUE}
+
+plot(las, color = "treeID", pal = "auto")
+
+```
+
+
+
+
+
+```{r}
+
+
+# Plot CHM (extra optional arguments remove labels and tick marks from the plot)
+plot(las, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
 ```
