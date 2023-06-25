@@ -31,7 +31,7 @@
           "filename":"dtm.tif",
           "output_type":"idw",
           "gdaldriver":"GTiff",
-          "resolution": 0.5,
+          "resolution": 4,
           "radius": 1
         },
         {
