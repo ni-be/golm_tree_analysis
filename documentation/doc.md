@@ -229,7 +229,89 @@ Foresttools also provided a good example but in the end it all came down to twea
 
 Another challenge, was confirming the tree count, while using the mensa as an example is easy there are a lot of other small trees and larger bushes accross the campus, making this rather difficult. And least when talking with the other groups one could confirm that the trees are about ~300. Whether or not that is correct is to be determined.  
 
+# BUT HOLD ON! LIDR to the rescue
 
+```R
+library(lidR)
+
+las <- readLAS("~/PROJECTS/golm_tree_analysis/data/Golm_May06_2018_Milan_UTM33N_WGS84_6digit_cl.las", select = "xyzr", filter = "-drop_z_below -1, -drop_z-above 40")
+
+
+
+# Point-to-raster 2 resolutions
+chm_p2r_05 <- rasterize_canopy(las, 5, p2r(subcircle = 0.2), pkg = "terra")
+chm_p2r_1 <- rasterize_canopy(las, 5, p2r(subcircle = 0.2), pkg = "terra")
+
+# Pitfree with and without subcircle tweak
+chm_pitfree_05_1 <- rasterize_canopy(las, 5, pitfree(), pkg = "terra")
+chm_pitfree_05_2 <- rasterize_canopy(las, 5, pitfree(subcircle = 0.2), pkg = "terra")
+
+# Post-processing median filter
+kernel <- matrix(1,3,3)
+chm_p2r_05_smoothed <- terra::focal(chm_p2r_05, w = kernel, fun = median, na.rm = TRUE)
+chm_p2r_1_smoothed <- terra::focal(chm_p2r_1, w = kernel, fun = median, na.rm = TRUE)
+
+
+f <- function(x) {
+  y <- 2.6 * (-(exp(-0.02*(x-2)) - 1)) + 3
+  y[x < 2] <- 1
+  y[x > 20] <- 10
+  return(y)
+}
+}
+
+heights <- seq(-2,20,0.5)
+ws <- f(heights)
+plot(heights, ws, type = "l",  ylim = c(0,5))
+
+
+ttops_chm_p2r_05 <- locate_trees(chm_p2r_05, lmf(f))
+ttops_chm_p2r_1 <- locate_trees(chm_p2r_1, lmf(f))
+ttops_chm_pitfree_05_1 <- locate_trees(chm_pitfree_05_1, lmf(f))
+ttops_chm_pitfree_05_2 <- locate_trees(chm_pitfree_05_2, lmf(f))
+ttops_chm_p2r_05_smoothed <- locate_trees(chm_p2r_05_smoothed, lmf(f))
+ttops_chm_p2r_1_smoothed <- locate_trees(chm_p2r_1_smoothed, lmf(f))
+
+print(nrow(ttops_chm_p2r_05))
+print(nrow(ttops_chm_p2r_1))
+print(nrow(ttops_chm_pitfree_05_1))
+print(nrow(ttops_chm_pitfree_05_2 ))
+print(nrow(ttops_chm_p2r_05_smoothed))
+print(nrow(ttops_chm_p2r_1_smoothed))
+
+par(mfrow=c(3,2))
+col <- height.colors(50)
+plot(chm_p2r_05, main = "CHM P2R 0.5", col = col); plot(sf::st_geometry(ttops_chm_p2r_05), add = T, pch =3)
+plot(chm_p2r_1, main = "CHM P2R 1", col = col); plot(sf::st_geometry(ttops_chm_p2r_1), add = T, pch = 3)
+plot(chm_p2r_05_smoothed, main = "CHM P2R 0.5 smoothed", col = col); plot(sf::st_geometry(ttops_chm_p2r_05_smoothed), add = T, pch =3)
+plot(chm_p2r_1_smoothed, main = "CHM P2R 1 smoothed", col = col); plot(sf::st_geometry(ttops_chm_p2r_1_smoothed), add = T, pch =3)
+plot(chm_pitfree_05_1, main = "CHM PITFREE 1", col = col); plot(sf::st_geometry(ttops_chm_pitfree_05_1), add = T, pch =3)
+plot(chm_pitfree_05_2, main = "CHM PITFREE 2", col = col); plot(sf::st_geometry(ttops_chm_pitfree_05_2), add = T, pch =3)
+
+```
+
+This approach gave good results and plot BUT, it needs tweaking in terms of numbers 
+best result I got was a treecount of 505 but this does not seem right, the plot with 634 trees seems to be more correct.
+
+```Shell
+
+[1] 750
+[1] 750
+[1] 661
+[1] 634
+[1] 505
+[1] 505
+```
+The resulting plots look as follows: 
+
+
+![Approach Rescue](img/approach4_plots.png)
+
+
+
+And the dynamic Window size in correlation to height looks like this: 
+
+![Approach4 WS](img/approach4_ws.png)
 ## Part 2 - Estimated area covered by trees:
 
 ## Part 3 - Percentage of deciduous trees:
