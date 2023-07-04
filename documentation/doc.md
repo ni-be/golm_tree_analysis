@@ -234,8 +234,7 @@ Another challenge, was confirming the tree count, while using the mensa as an ex
 ```R
 library(lidR)
 
-las <- readLAS("~/PROJECTS/golm_tree_analysis/data/Golm_May06_2018_Milan_UTM33N_WGS84_6digit_cl.las", select = "xyzr", filter = "-drop_z_below -1, -drop_z-above 40")
-
+las <- readLAS("~/PROJECTS/golm_tree_analysis/data/Golm_May06_2018_Milan_UTM33N_WGS84_6digit_cl.las", select = "xyzr", filter = "-drop_z_below 20, -drop_z-above 40")
 
 
 # Point-to-raster 2 resolutions
@@ -254,10 +253,9 @@ chm_p2r_1_smoothed <- terra::focal(chm_p2r_1, w = kernel, fun = median, na.rm = 
 
 f <- function(x) {
   y <- 2.6 * (-(exp(-0.02*(x-2)) - 1)) + 3
-  y[x < 2] <- 1
-  y[x > 20] <- 10
+  y[x < 2] <- 3
+  y[x > 15] <- 15
   return(y)
-}
 }
 
 heights <- seq(-2,20,0.5)
@@ -291,16 +289,16 @@ plot(chm_pitfree_05_2, main = "CHM PITFREE 2", col = col); plot(sf::st_geometry(
 ```
 
 This approach gave good results and plot BUT, it needs tweaking in terms of numbers 
-best result I got was a treecount of 505 but this does not seem right, the plot with 634 trees seems to be more correct.
+best result I got was the following:
 
 ```Shell
 
-[1] 750
-[1] 750
-[1] 661
-[1] 634
-[1] 505
-[1] 505
+[1] 509
+[1] 509
+[1] 386
+[1] 372
+[1] 325
+[1] 325
 ```
 The resulting plots look as follows: 
 
