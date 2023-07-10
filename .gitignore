@@ -1,4 +1,10 @@
 data/
 .Rproj.user
+<<<<<<< HEAD
 *.las
 *.laz
+||||||| parent of c797368 (gitignore)
+=======
+*.las
+*.laz
+>>>>>>> c797368 (gitignore)
